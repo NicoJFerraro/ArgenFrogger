@@ -1,0 +1,1 @@
+SFML version SFML-2.6.1-windows-vc17-64-bit
