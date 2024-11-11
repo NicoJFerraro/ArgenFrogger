@@ -22,7 +22,6 @@ void CameraController::Update(const sf::Vector2f& targetPosition)
 {
     if (targetPosition.y < cameraView.getCenter().y)
     {
-        std::cout << " Centering Camera";
         cameraView.setCenter(cameraView.getCenter().x, targetPosition.y);
     }
 }

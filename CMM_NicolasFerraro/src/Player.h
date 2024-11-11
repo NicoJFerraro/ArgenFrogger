@@ -2,7 +2,6 @@
 #include <SFML/Graphics.hpp>
 #include "Global.h"
 
-
 class Player {
 public:
     Player(sf::Vector2u size, unsigned int lifesAmount, sf::Vector2f initialPosition);
@@ -12,6 +11,7 @@ public:
     void Draw(sf::RenderWindow& window);
     void DrawLives(sf::RenderWindow& window);
     void Move(sf::Event event);
+    int GetLifes();
     sf::RectangleShape GetShape();
 
 private:

@@ -45,6 +45,11 @@ void Player::Move(sf::Event event) {
     }
 }
 
+int Player::GetLifes()
+{
+    return lifes;
+}
+
 bool Player::LostLife(sf::Vector2u size, float checkpointPosition) {
     frog.setPosition(sf::Vector2f(size.x / 2, checkpointPosition - frog.getSize().y / 2));
     lifes--;

@@ -1,32 +1,30 @@
-#include "Menu.h"
+#include "GameOverScreen.h"
 #include <iostream>
 
-Menu::Menu(const sf::Vector2u& windowSize) : selectedItemIndex(0) {
+GameOverScreen::GameOverScreen(const sf::Vector2u& windowSize) : selectedItemIndex(0) {
     if (!font.loadFromFile(Global::FONT_PATH)) {
         std::cerr << "Error loading " + Global::FONT_PATH << std::endl;
     }
 
-    // Config title
     title.setFont(font);
-    title.setString(Global::GAME_TITLE);
+    title.setString("GAME OVER");
     title.setCharacterSize(Global::TITLE_FONT_SIZE);
     title.setFillColor(Global::TITLE_COLOR);
-    title.setPosition(windowSize.x / 2 - title.getGlobalBounds().width / 2, Global::TITLE_POSITION_Y);
+    title.setPosition(windowSize.x / 2 - title.getGlobalBounds().width / 2, windowSize.y / 4);
 
-    // Config menu options
-    std::vector<std::string> options = { Global::MENU_OPTION_PLAY, Global::MENU_OPTION_SAVED_OPTION, Global::MENU_OPTION_EXIT };
+    std::vector<std::string> options = {"Presiona Enter para ir Menu Principal"};
     for (size_t i = 0; i < options.size(); ++i) {
         sf::Text item;
         item.setFont(font);
         item.setString(options[i]);
         item.setCharacterSize(Global::MENU_ITEM_FONT_SIZE);
         item.setFillColor(Global::MENU_ITEM_COLOR);
-        item.setPosition(windowSize.x / 2 - item.getGlobalBounds().width / 2, Global::MENU_ITEM_START_Y + i * Global::MENU_ITEM_SPACING);
+        item.setPosition(windowSize.x / 2 - item.getGlobalBounds().width / 2, windowSize.y / 2 + i * Global::MENU_ITEM_SPACING);
         menuItems.push_back(item);
     }
 }
 
-void Menu::Draw(sf::RenderWindow& window) {
+void GameOverScreen::Draw(sf::RenderWindow& window) {
     window.draw(title);
     for (size_t i = 0; i < menuItems.size(); ++i) {
         if (i == selectedItemIndex) {
@@ -39,13 +37,13 @@ void Menu::Draw(sf::RenderWindow& window) {
     }
 }
 
-void Menu::MoveUp() {
+void GameOverScreen::MoveUp() {
     if (selectedItemIndex - 1 >= 0) {
         selectedItemIndex--;
     }
 }
 
-void Menu::MoveDown() {
+void GameOverScreen::MoveDown() {
     if (selectedItemIndex + 1 < menuItems.size()) {
         selectedItemIndex++;
     }

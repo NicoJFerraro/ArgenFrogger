@@ -12,16 +12,21 @@ namespace Global {
     const std::string WINDOW_TITLE = "ArgenFrogger";
 
     // Menu
-    const int MENU_PLAY_OPTION = 0;
-    const int MENU_EXIT_OPTION = 1;
-
     const std::string GAME_TITLE = "ArgenFrogger";
     const int TITLE_FONT_SIZE = 70;
     const sf::Color TITLE_COLOR = sf::Color::White;
     const float TITLE_POSITION_Y = 50.0f;
 
-    const std::string MENU_OPTION_PLAY = "Jugar";
+    const std::string MENU_OPTION_PLAY = "Nuevo Juego";
+    const std::string MENU_OPTION_SAVED_OPTION = "Cargar Partida";
     const std::string MENU_OPTION_EXIT = "Salir";
+    const std::string PAUSE_OPTION_RESUME = "Resume";
+    const std::string PAUSE_OPTION_EXIT = "Save and Exit";
+
+    const int MENU_PLAY_OPTION = 0;
+    const int MENU_PLAY_SAVED_OPTION = 1;
+    const int MENU_EXIT_OPTION = 2;
+
     const int MENU_ITEM_FONT_SIZE = 50;
     const sf::Color MENU_ITEM_COLOR = sf::Color::White;
     const sf::Color MENU_SELECTED_COLOR = sf::Color::Red;
@@ -71,6 +76,9 @@ namespace Global {
     const float TRUCK_RESTRICTED_RANGE = 100.0f;
     const int TRUCK_POSITION_RANGE = 600;
     const int TRUCK_POSITION_OFFSET = 300;
+
+    //Save
+    const std::string SAVEGAME_PATH = "C:\\Users\\nicol\\Documents\\ArgenFroggerData\\save.xml";
 }
 
 #endif

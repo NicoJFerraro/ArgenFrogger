@@ -3,7 +3,6 @@
 #include <SFML/Graphics.hpp>
 #include "Global.h"
 
-
 class Timer {
 public:
     Timer(float timeLimit);

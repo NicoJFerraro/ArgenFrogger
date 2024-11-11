@@ -11,8 +11,7 @@ public:
     // Here we input the level seed
     LevelGenerator(unsigned int seed, sf::Vector2u windowSize);
 
-    //Generate a list of trucks for each checkpoint
-    std::vector<Truck> GenerateTrucks(float checkpointY, int truckCount);
+    std::vector<Truck> GenerateTrucks(float checkpointY, int truckCount, int currentCheckpoint);
 
 private:
     sf::Vector2u windowSize;
