@@ -20,6 +20,7 @@ ArgenFrogger es un proyecto desarrollado como parte de mi cursada de C++ para vi
 - **Recursos de Arte Original de Frogger 2D** - Adaptación visual
 - **[Mixkit](https://mixkit.co/free-sound-effects/game/)** - Efectos de sonido gratuitos
 - **La Mona Jiménez y Rodrigo Bueno** - Música
+- **tinyxml2 - Una librería que hizo posible el guardado de este juego**
 
 ## Descarga
 [https://afipinspector.itch.io/argenfrogger](https://afipinspector.itch.io/argenfrogger)
