@@ -63,7 +63,8 @@ namespace Global {
 
     // HUD
     const sf::Vector2f HUD_CHECKPOINT_POSITION(50, 50);
-    const sf::Color HUD_TEXT_COLOR = sf::Color::White;
+    const sf::Color HUD_TEXT_COLOR = sf::Color::Black;
+    const sf::Color LITTLE_TIMELEFT_TEXT_COLOR = sf::Color::Red;
 
     // Finish line
     const float FINISH_LINE_THICKNESS = 5.0f;
@@ -106,6 +107,20 @@ namespace Global {
     const std::string TRUCKFLIPPED_SPRITE_PATH = "res\\sprites\\TrucksFlipped.png";
     const std::string TILEMAP_SPRITE_PATH = "res\\sprites\\Route.png";
     const std::string FROG_DEATH_SPRITE_PATH = "res\\sprites\\AnimationDeath.png";
+
+    //SFX
+    const std::string SFX_CHECKPOINTMESSI = "res\\sfx\\messi-higher.wav";
+    const std::string SFX_CHECKPOINTWIN = "res\\sfx\\checkpointwin.wav";
+    const std::string SFX_TIMELEFT = "res\\sfx\\timeleft.wav";
+    const std::string SFX_BUTTONMOVE = "res\\sfx\\buttonmove.wav";
+    const std::string SFX_BUTTONPRESS = "res\\sfx\\buttonpress.wav";
+    const std::string SFX_FROGMOVE = "res\\sfx\\frogmove.wav";
+    const std::string SFX_GAMEOVER = "res\\sfx\\gameover.wav";
+    const std::string SFX_LOSELIFE = "res\\sfx\\lostlife.wav";
+
+    //MUSIC
+    const std::string MUSIC_MENU = "res\\music\\rodrigo.wav";
+    const std::string MUSIC_GAMEPLAY = "res\\music\\transito-mona.wav";
 }
 
 #endif

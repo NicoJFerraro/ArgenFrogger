@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Global.h"
+#include "AudioManager.h"
 
 class Timer {
 public:
@@ -9,6 +10,7 @@ public:
     void Update();
     void Restart();
     bool IsTimeUp() const;
+    bool LittleTimeLeft();
     int GetRemainingTime() const;
     void PauseTimer(bool pause);
     void InPauseUpdate();
@@ -22,4 +24,5 @@ private:
     bool pauseTime;
     float gamePauseTimer;
     float savedTime;
+    bool soundPlayed;
 };

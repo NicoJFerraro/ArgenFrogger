@@ -12,6 +12,8 @@
 #include "SaveManager.cpp"
 #include <filesystem>
 #include "GameOverScreen.h"
+#include "AudioManager.h"
+
 
 struct Checkpoint {
     float positionY;
@@ -34,6 +36,7 @@ int main() {
     int savedSeed = seed;
     int savedLives = Global::INITIAL_LIVES;
     int savedCheckpoint = 1;
+    AudioManager::Instance().PlayMusic(Global::MUSIC_MENU);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -44,9 +47,18 @@ int main() {
             if (inMenu) {
                 if (event.type == sf::Event::KeyReleased) {
                     switch (event.key.code) {
-                    case sf::Keyboard::W: menu.MoveUp(); break;
-                    case sf::Keyboard::S: menu.MoveDown(); break;
+                    case sf::Keyboard::W:
+                        menu.MoveUp();
+                        AudioManager::Instance().PlaySFX(Global::SFX_BUTTONMOVE);
+                        break;
+
+                    case sf::Keyboard::S: 
+                        menu.MoveDown();
+                        AudioManager::Instance().PlaySFX(Global::SFX_BUTTONMOVE);
+                        break;
+
                     case sf::Keyboard::Enter:
+                        AudioManager::Instance().PlaySFX(Global::SFX_BUTTONPRESS);
                         if (menu.GetPressedItem() == Global::MENU_PLAY_OPTION) {
                             inMenu = false;
                             savedSeed = static_cast<unsigned int>(std::time(nullptr));
@@ -82,6 +94,7 @@ int main() {
             menu.Draw(window);
         }
         else {
+            AudioManager::Instance().PlayMusic(Global::MUSIC_GAMEPLAY);
             Checkpoint oldCheckpoint;
             LevelGenerator levelGenerator(savedSeed, window.getSize());
             std::deque<Checkpoint> checkpoints;
@@ -116,6 +129,7 @@ int main() {
                     }
 
                     if (!frog.IsDeadAnimationPlaying() && !isPaused && gameEvent.type == sf::Event::KeyReleased) {
+                        AudioManager::Instance().PlaySFX(Global::SFX_FROGMOVE);
                         frog.Move(gameEvent);
                         cameraController.Update(frog.GetShape().getPosition());
                         previousPosition = frog.GetShape().getPosition();
@@ -135,6 +149,7 @@ int main() {
                                 inGame = false;
                                 inMenu = true;
                                 isPaused = false;
+                                AudioManager::Instance().PlayMusic(Global::MUSIC_MENU);
                             }
                             else if (pauseMenu.GetSelectedOption() == 1) {
                                 isPaused = false;
@@ -150,8 +165,12 @@ int main() {
 
                     if (timer.IsTimeUp()) {
                         if (!frog.LostLife(window.getSize(), checkpoints[0].positionY))
+                        {
+                            AudioManager::Instance().PlaySFX(Global::SFX_LOSELIFE);
                             cameraController.CenterOnPlayer(frog.GetShape().getPosition());
+                        }
                         else {
+                            AudioManager::Instance().PlaySFX(Global::SFX_GAMEOVER);
                             inGame = false;
                             inMenu = true;
                         }
@@ -159,6 +178,7 @@ int main() {
                     }
 
                     if (frog.GetShape().getPosition().y < checkpoints[1].positionY) {
+                        //Reached new checkpoint
                         oldCheckpoint = checkpoints.front();
                         checkpoints.pop_front();
                         ++currentCheckpoint;
@@ -167,6 +187,8 @@ int main() {
                         TileMap tileMap = levelGenerator.GenerateTileMap(newCheckpointY, currentCheckpoint);
                         checkpoints.push_back({ newCheckpointY, trucks, tileMap});
                         timer.Restart();
+                        AudioManager::Instance().PlaySFX(Global::SFX_CHECKPOINTWIN);
+                        AudioManager::Instance().PlaySFX(Global::SFX_CHECKPOINTMESSI);
                     }
 
                     bool collision = false;
@@ -226,8 +248,12 @@ int main() {
 
                     if (!frog.IsDeadAnimationPlaying() && collision) {
                         if (!frog.LostLife(window.getSize(), checkpoints[0].positionY))
+                        {
+                            AudioManager::Instance().PlaySFX(Global::SFX_LOSELIFE);
                             cameraController.OnPlayerDeath(checkpoints[0].positionY);
+                        }
                         else {
+                            AudioManager::Instance().PlaySFX(Global::SFX_GAMEOVER);
                             inGame = false;
                             inMenu = false;
                             isGameOver = true;
@@ -267,6 +293,7 @@ int main() {
                             isGameOver = false;
                             savedLives = Global::INITIAL_LIVES;
                             savedCheckpoint = 1;
+                            AudioManager::Instance().PlayMusic(Global::MUSIC_MENU);
                             break;
                         }
                     }

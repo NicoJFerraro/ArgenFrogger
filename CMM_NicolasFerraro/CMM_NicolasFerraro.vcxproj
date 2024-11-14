@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AudioManager.cpp" />
     <ClCompile Include="src\CameraController.cpp" />
     <ClCompile Include="src\GameOverScreen.cpp" />
     <ClCompile Include="src\LevelGenerator.cpp" />
@@ -33,6 +34,7 @@
     <ClCompile Include="src\Truck.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AudioManager.h" />
     <ClInclude Include="src\CameraController.h" />
     <ClInclude Include="src\GameOverScreen.h" />
     <ClInclude Include="src\Global.h" />
@@ -126,7 +128,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)\libs\SFML\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib</AdditionalDependencies>
+      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>MKDIR "$(TargetDir)res\"
@@ -170,7 +172,7 @@ XCOPY "$(ProjectDir)res\" "$(TargetDir)res\" /e /h /y /s</Command>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)\libs\SFML\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib</AdditionalDependencies>
+      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>MKDIR "$(TargetDir)res\"
