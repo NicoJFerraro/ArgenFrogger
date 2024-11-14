@@ -9,7 +9,7 @@ public:
     void Draw(sf::RenderWindow& window);
     void MoveUp();
     void MoveDown();
-    int GetPressedItem() const { return selectedItemIndex; }
+    int GetPressedItem() { return selectedItemIndex; }
 
 private:
     int selectedItemIndex;

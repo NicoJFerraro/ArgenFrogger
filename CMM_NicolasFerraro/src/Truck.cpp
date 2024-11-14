@@ -1,25 +1,51 @@
+#pragma once
 #include "Truck.h"
+#include <iostream>
 
-Truck::Truck(sf::Vector2u size, float posX, float posY, float speed, bool flipMovement)
+Truck::Truck(float posX, float posY, float speed, bool flipMovement, sf::Vector2u textureSize, sf::Vector2u rect, sf::Vector2u truckSize)
 {
-    truck.setSize(sf::Vector2f(Global::TRUCK_WIDTH, Global::TRUCK_HEIGHT));
+    truck.setSize(sf::Vector2f(truckSize.x, truckSize.y));
+
     truck.setFillColor(Global::TRUCK_COLOR);
     truck.setPosition(sf::Vector2f(posX, posY));
 
     this->speed = speed;
     this->flipMovement = flipMovement;
+    this->textureSize = textureSize;
+    this->rect = rect;
+    this->truckSize = truckSize;
 
     originalPosX = posX;
     originalPosY = posY;
+
+    if (flipMovement)
+    {
+        if (!truckTexture.loadFromFile(Global::TRUCKFLIPPED_SPRITE_PATH)) {
+            std::cerr << "Error loading player spritesheet" << std::endl;
+        }
+    }
+    else
+    {
+        if (!truckTexture.loadFromFile(Global::TRUCK_SPRITE_PATH)) {
+            std::cerr << "Error loading player spritesheet" << std::endl;
+        }
+    }
+
+    sprite.setTextureRect(sf::IntRect(rect.x, rect.y, textureSize.x, textureSize.y));
+    sprite.setTexture(truckTexture);
+    sprite.setScale(truckSize.x / textureSize.x, truckSize.y / textureSize.y);
 }
 
 Truck::~Truck()
 {
 }
 
-void Truck::Draw(sf::RenderWindow& window) const
+void Truck::Draw(sf::RenderWindow& window)
 {
-    window.draw(truck);
+    sprite.setTexture(truckTexture);
+    sprite.setScale(truckSize.x / textureSize.x, truckSize.y / textureSize.y);
+    sprite.setPosition(truck.getPosition());
+    window.draw(sprite);
 }
 
 void Truck::Move(sf::Vector2u size)

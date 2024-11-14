@@ -18,6 +18,8 @@ private:
     sf::Text title;
     std::vector<sf::Text> menuItems;
     int selectedItemIndex;
+    sf::Texture pauseMenuBackground;
+    sf::Sprite pauseMenuBackgroundSprite;
 };
 
 #endif

@@ -10,6 +10,8 @@ public:
     void Restart();
     bool IsTimeUp() const;
     int GetRemainingTime() const;
+    void PauseTimer(bool pause);
+    void InPauseUpdate();
 
     void Draw(sf::RenderWindow& window, const sf::Font& font);
 
@@ -17,4 +19,7 @@ private:
     sf::Clock clock;
     float timeLimit;
     float remainingTime;
+    bool pauseTime;
+    float gamePauseTimer;
+    float savedTime;
 };

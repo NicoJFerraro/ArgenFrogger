@@ -15,4 +15,6 @@ private:
     std::vector<sf::Text> menuItems;
     sf::Font font;
     sf::Text title;
+    sf::Texture backgroundMenu;
+    sf::Sprite backgroundSprite;
 };

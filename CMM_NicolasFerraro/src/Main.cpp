@@ -16,6 +16,7 @@
 struct Checkpoint {
     float positionY;
     std::vector<Truck> trucks;
+    TileMap tileMap;
 };
 
 int main() {
@@ -27,6 +28,7 @@ int main() {
     GameOverScreen gameOverScreen(window.getSize());
     bool inMenu = true;
     bool isPaused = false;
+    bool isGameOver = false;
     sf::View hudView = window.getDefaultView();
 
     int savedSeed = seed;
@@ -47,6 +49,9 @@ int main() {
                     case sf::Keyboard::Enter:
                         if (menu.GetPressedItem() == Global::MENU_PLAY_OPTION) {
                             inMenu = false;
+                            savedSeed = static_cast<unsigned int>(std::time(nullptr));
+                            savedLives = Global::INITIAL_LIVES;
+                            savedCheckpoint = 1;
                         }
                         else if (menu.GetPressedItem() == Global::MENU_PLAY_SAVED_OPTION) {
                             if (std::filesystem::exists(Global::SAVEGAME_PATH)) {
@@ -77,14 +82,17 @@ int main() {
             menu.Draw(window);
         }
         else {
+            Checkpoint oldCheckpoint;
             LevelGenerator levelGenerator(savedSeed, window.getSize());
             std::deque<Checkpoint> checkpoints;
+
             int currentCheckpoint = savedCheckpoint;
-            std::cout << "Saved Checkpoint: " << savedCheckpoint;
 
             for (int i = 0; i < Global::INITIAL_CHECKPOINTS; ++i) {
                 float checkpointY = -i * Global::CHECKPOINT_DISTANCE;
-                checkpoints.push_back({ checkpointY, levelGenerator.GenerateTrucks(checkpointY, 10, currentCheckpoint)});
+                std::vector<Truck> trucks = levelGenerator.GenerateTrucks(checkpointY, 10, currentCheckpoint);
+                TileMap tileMap = levelGenerator.GenerateTileMap(checkpointY, currentCheckpoint);
+                checkpoints.push_back({ checkpointY, trucks, tileMap});
             }
 
             Player frog(window.getSize(), savedLives,
@@ -94,9 +102,12 @@ int main() {
 
             Timer timer(Global::TIMER_LIMIT);
             bool inGame = true;
-
+            sf::Clock clock;
             while (inGame) {
                 sf::Event gameEvent;
+
+                float deltaTime = clock.restart().asSeconds();
+
                 while (window.pollEvent(gameEvent)) {
                     if (gameEvent.type == sf::Event::Closed) window.close();
 
@@ -104,13 +115,16 @@ int main() {
                         isPaused = !isPaused;
                     }
 
-                    if (!isPaused && gameEvent.type == sf::Event::KeyReleased) {
+                    if (!frog.IsDeadAnimationPlaying() && !isPaused && gameEvent.type == sf::Event::KeyReleased) {
                         frog.Move(gameEvent);
                         cameraController.Update(frog.GetShape().getPosition());
                         previousPosition = frog.GetShape().getPosition();
                     }
                 }
 
+                frog.Update(deltaTime);
+
+                timer.PauseTimer(isPaused);
                 if (isPaused) {
                     if (gameEvent.type == sf::Event::KeyReleased) {
                         if (gameEvent.key.code == sf::Keyboard::W) pauseMenu.MoveUp();
@@ -129,9 +143,11 @@ int main() {
                     }
                     window.clear();
                     pauseMenu.Draw(window);
+                    timer.InPauseUpdate();
                 }
                 else {
                     timer.Update();
+
                     if (timer.IsTimeUp()) {
                         if (!frog.LostLife(window.getSize(), checkpoints[0].positionY))
                             cameraController.CenterOnPlayer(frog.GetShape().getPosition());
@@ -143,10 +159,13 @@ int main() {
                     }
 
                     if (frog.GetShape().getPosition().y < checkpoints[1].positionY) {
+                        oldCheckpoint = checkpoints.front();
                         checkpoints.pop_front();
                         ++currentCheckpoint;
                         float newCheckpointY = checkpoints.back().positionY - Global::CHECKPOINT_DISTANCE;
-                        checkpoints.push_back({ newCheckpointY, levelGenerator.GenerateTrucks(newCheckpointY, 10, currentCheckpoint)});
+                        std::vector<Truck> trucks = levelGenerator.GenerateTrucks(newCheckpointY, 10, currentCheckpoint);
+                        TileMap tileMap = levelGenerator.GenerateTileMap(newCheckpointY, currentCheckpoint);
+                        checkpoints.push_back({ newCheckpointY, trucks, tileMap});
                         timer.Restart();
                     }
 
@@ -164,18 +183,32 @@ int main() {
 
                     window.clear();
                     cameraController.ApplyToWindow(window);
-                    frog.Draw(window);
+                    window.draw(oldCheckpoint.tileMap);
+                    for (auto& checkpoint : checkpoints) {
+                        //Draw Tilemaps
+                        window.draw(checkpoint.tileMap);
 
-                    for (const auto& checkpoint : checkpoints) {
-                        for (const auto& truck : checkpoint.trucks) {
+                        //Draw Trucks
+                        for (auto& truck : checkpoint.trucks) {
                             truck.Draw(window);
                         }
-                        sf::RectangleShape finishLine(sf::Vector2f(window.getSize().x, Global::FINISH_LINE_THICKNESS));
-                        finishLine.setPosition(0, checkpoint.positionY);
-                        finishLine.setFillColor(Global::FINISH_LINE_COLOR);
-                        window.draw(finishLine);
+                        
+                        //Draw FinishLine Sprite
+                        sf::Texture sideWalkTexture;
+                        sf::Sprite sideWalkSprite;
+
+                        if (!sideWalkTexture.loadFromFile("res\\sprites\\SidewalkBig.png"))
+                        {
+                            std::cerr << "Error loading heart texture" << std::endl;
+                        }
+
+                        sideWalkSprite.setTexture(sideWalkTexture);
+                        sideWalkSprite.setScale(sideWalkTexture.getSize().x, Global::TRUCK_RAIL_SIZE / sideWalkTexture.getSize().y);
+                        sideWalkSprite.setPosition(0, checkpoint.positionY);
+                        window.draw(sideWalkSprite);
                     }
 
+                    frog.Draw(window);             
                     window.setView(hudView);
                     sf::Font font;
                     font.loadFromFile(Global::FONT_PATH);
@@ -191,45 +224,58 @@ int main() {
                     checkpointText.setPosition(Global::HUD_CHECKPOINT_POSITION);
                     window.draw(checkpointText);
 
-                    if (collision) {
+                    if (!frog.IsDeadAnimationPlaying() && collision) {
                         if (!frog.LostLife(window.getSize(), checkpoints[0].positionY))
-                            cameraController.CenterOnPlayer(frog.GetShape().getPosition());
+                            cameraController.OnPlayerDeath(checkpoints[0].positionY);
                         else {
                             inGame = false;
                             inMenu = false;
+                            isGameOver = true;
                         }
                     }
+
+                    sf::Vector2f frogPosition = frog.GetShape().getPosition();
+                    sf::FloatRect cameraBounds = cameraController.GetCameraBounds();
+
+                    // Limit position on X axis
+                    if (frogPosition.x - frog.GetShape().getSize().x < cameraBounds.left) {
+                        frogPosition.x = cameraBounds.left;
+                    }
+                    else if (frogPosition.x + frog.GetShape().getSize().x > cameraBounds.left + cameraBounds.width) {
+                        frogPosition.x = cameraBounds.left + cameraBounds.width - frog.GetShape().getSize().x;
+                    }
+
+                    // Limit position on Y axis
+                    if (frogPosition.y + frog.GetShape().getSize().y > cameraBounds.top + cameraBounds.height) {
+                         frogPosition.y = cameraBounds.top + cameraBounds.height - frog.GetShape().getSize().y;
+                    }
+
+                    frog.ForcePosition(frogPosition);
                 }
                 window.display();
             }
 
-            if (!inMenu) {
-                while (!inMenu) {
-                    sf::Event gameOverEvent;
-                    while (window.pollEvent(gameOverEvent)) {
-                        if (gameOverEvent.type == sf::Event::Closed) window.close();
-                    }
-
-                    gameOverScreen.Draw(window);
-
+           if(!inMenu)
+            while (isGameOver) {
+                sf::Event gameOverEvent;
+                while (window.pollEvent(gameOverEvent)) {
+                    if (gameOverEvent.type == sf::Event::Closed) window.close();
                     if (gameOverEvent.type == sf::Event::KeyReleased) {
-                        if (gameOverEvent.key.code == sf::Keyboard::W) gameOverScreen.MoveUp();
-                        else if (gameOverEvent.key.code == sf::Keyboard::S) gameOverScreen.MoveDown();
-                        else if (gameOverEvent.key.code == sf::Keyboard::Enter) {
-                            if (gameOverScreen.GetPressedItem() == 0) {
-                                inMenu = true;
-                                savedLives = Global::INITIAL_LIVES;
-                                savedCheckpoint = 1;
-                            }
-                            else if (gameOverScreen.GetPressedItem() == 1) {
-                                window.close();
-                            }
+                        switch (gameOverEvent.key.code) {
+                        case sf::Keyboard::Enter:
+                            inMenu = true;
+                            isGameOver = false;
+                            savedLives = Global::INITIAL_LIVES;
+                            savedCheckpoint = 1;
+                            break;
                         }
                     }
-
-                    window.display();
                 }
+                gameOverScreen.Draw(window);
+                window.display();
             }
+
+
         }
         window.display();
     }

@@ -6,6 +6,13 @@ Menu::Menu(const sf::Vector2u& windowSize) : selectedItemIndex(0) {
         std::cerr << "Error loading " + Global::FONT_PATH << std::endl;
     }
 
+    if (!backgroundMenu.loadFromFile("res\\sprites\\MenuBackground.png")) {
+        std::cerr << "Error loading " + Global::FONT_PATH << std::endl;
+    }
+
+    backgroundSprite.setTexture(backgroundMenu);
+    backgroundSprite.setScale(windowSize.x / backgroundMenu.getSize().x, windowSize.y / backgroundMenu.getSize().y);
+
     // Config title
     title.setFont(font);
     title.setString(Global::GAME_TITLE);
@@ -27,6 +34,7 @@ Menu::Menu(const sf::Vector2u& windowSize) : selectedItemIndex(0) {
 }
 
 void Menu::Draw(sf::RenderWindow& window) {
+    window.draw(backgroundSprite);
     window.draw(title);
     for (size_t i = 0; i < menuItems.size(); ++i) {
         if (i == selectedItemIndex) {

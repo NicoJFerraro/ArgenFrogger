@@ -2,11 +2,14 @@
 #include <sstream>
 
 Timer::Timer(float timeLimit) : timeLimit(timeLimit), remainingTime(timeLimit) {
+
     clock.restart(); // Initialize clock
+    gamePauseTimer = 0;
 }
 
 void Timer::Update() {
-    remainingTime = timeLimit - clock.getElapsedTime().asSeconds();
+    if (!pauseTime)
+        remainingTime = timeLimit - clock.getElapsedTime().asSeconds() + gamePauseTimer;
 }
 
 void Timer::Restart() {
@@ -20,6 +23,17 @@ bool Timer::IsTimeUp() const {
 
 int Timer::GetRemainingTime() const {
     return static_cast<int>(remainingTime);
+}
+
+void Timer::PauseTimer(bool pause)
+{
+    pauseTime = pause;
+}
+
+void Timer::InPauseUpdate()
+{
+    gamePauseTimer = clock.getElapsedTime().asSeconds();
+    savedTime = remainingTime;
 }
 
 void Timer::Draw(sf::RenderWindow& window, const sf::Font& font) {

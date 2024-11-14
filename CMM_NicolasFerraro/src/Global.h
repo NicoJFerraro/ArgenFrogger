@@ -3,16 +3,18 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <vector>
+
 
 namespace Global {
 
     // Window
-    const unsigned int WINDOW_WIDTH = 2560;
-    const unsigned int WINDOW_HEIGHT = 1440;
+    const unsigned int WINDOW_WIDTH = 1920;
+    const unsigned int WINDOW_HEIGHT = 1080;
     const std::string WINDOW_TITLE = "ArgenFrogger";
 
     // Menu
-    const std::string GAME_TITLE = "ArgenFrogger";
+    const std::string GAME_TITLE = "";
     const int TITLE_FONT_SIZE = 70;
     const sf::Color TITLE_COLOR = sf::Color::White;
     const float TITLE_POSITION_Y = 50.0f;
@@ -29,8 +31,8 @@ namespace Global {
 
     const int MENU_ITEM_FONT_SIZE = 50;
     const sf::Color MENU_ITEM_COLOR = sf::Color::White;
-    const sf::Color MENU_SELECTED_COLOR = sf::Color::Red;
-    const float MENU_ITEM_START_Y = 150.0f;
+    const sf::Color MENU_SELECTED_COLOR = sf::Color::Yellow;
+    const float MENU_ITEM_START_Y = 400.0f;
     const float MENU_ITEM_SPACING = 60.0f;
 
     // Checkpoints
@@ -39,9 +41,9 @@ namespace Global {
 
     // Player
     const int INITIAL_LIVES = 3;
-    const float PLAYER_SIZE = 80.0f;
-    const float PLAYER_MOVE_OFFSET = 80.0f;
-    const float PLAYER_HEIGHT = 120.0f;
+    const float PLAYER_SIZE = 40.0f;
+    const float PLAYER_MOVE_OFFSET = 60.0f;
+    const float PLAYER_HEIGHT = 40.0f;
     const sf::Vector2f PLAYER_START_POSITION(WINDOW_WIDTH / 2, 0);
 
     // Lives
@@ -68,17 +70,42 @@ namespace Global {
     const sf::Color FINISH_LINE_COLOR = sf::Color::White;
 
     // Trucks
+// Definir un struct para almacenar los datos de cada camión
+    struct TruckData {
+        sf::Vector2u textureSize;
+        sf::Vector2u rect;
+        sf::Vector2u truckSize;
+
+    };
+
+    // Definir una lista de camiones con sus tamaños y rectángulos
+    const std::vector<TruckData> TRUCKS = {
+        {{16, 9}, {0, 0}, {60, 36}},
+        {{16, 10}, {0, 9}, {60, 40}},
+        {{16, 12}, {0, 19}, {60, 48}},
+        {{16, 13}, {0, 31}, {60, 52}},
+        {{32, 13}, {0, 44}, {120, 52}}
+    };
+
     const float TRUCK_WIDTH = 120.0f;
-    const float TRUCK_HEIGHT = 60.0f;
+    const float TRUCK_HEIGHT = 52.0f;
     const sf::Color TRUCK_COLOR = sf::Color::Red;
     const float TRUCK_BASE_SPEED = 0.1f;
-    const int TRUCK_SPEED_RANGE = 5;
+    const int TRUCK_SPEED_RANGE = 1;
     const float TRUCK_RESTRICTED_RANGE = 100.0f;
     const int TRUCK_POSITION_RANGE = 600;
     const int TRUCK_POSITION_OFFSET = 300;
+    const int TRUCK_RAIL_SIZE = 70;
 
     //Save
     const std::string SAVEGAME_PATH = "C:\\Users\\nicol\\Documents\\ArgenFroggerData\\save.xml";
+
+    //Sprites
+    const std::string FROG_SPRITE_PATH = "res\\sprites\\Frogger.png";
+    const std::string TRUCK_SPRITE_PATH = "res\\sprites\\Trucks.png";
+    const std::string TRUCKFLIPPED_SPRITE_PATH = "res\\sprites\\TrucksFlipped.png";
+    const std::string TILEMAP_SPRITE_PATH = "res\\sprites\\Route.png";
+    const std::string FROG_DEATH_SPRITE_PATH = "res\\sprites\\AnimationDeath.png";
 }
 
 #endif
