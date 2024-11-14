@@ -22,8 +22,8 @@ namespace Global {
     const std::string MENU_OPTION_PLAY = "Nuevo Juego";
     const std::string MENU_OPTION_SAVED_OPTION = "Cargar Partida";
     const std::string MENU_OPTION_EXIT = "Salir";
-    const std::string PAUSE_OPTION_RESUME = "Resume";
-    const std::string PAUSE_OPTION_EXIT = "Save and Exit";
+    const std::string PAUSE_OPTION_RESUME = "Volver al Juego";
+    const std::string PAUSE_OPTION_EXIT = "Guardar y Salir";
 
     const int MENU_PLAY_OPTION = 0;
     const int MENU_PLAY_SAVED_OPTION = 1;
@@ -63,7 +63,7 @@ namespace Global {
 
     // HUD
     const sf::Vector2f HUD_CHECKPOINT_POSITION(50, 50);
-    const sf::Color HUD_TEXT_COLOR = sf::Color::Black;
+    const sf::Color HUD_TEXT_COLOR = sf::Color::Yellow;
     const sf::Color LITTLE_TIMELEFT_TEXT_COLOR = sf::Color::Red;
 
     // Finish line
@@ -71,7 +71,6 @@ namespace Global {
     const sf::Color FINISH_LINE_COLOR = sf::Color::White;
 
     // Trucks
-// Definir un struct para almacenar los datos de cada camión
     struct TruckData {
         sf::Vector2u textureSize;
         sf::Vector2u rect;
@@ -79,7 +78,6 @@ namespace Global {
 
     };
 
-    // Definir una lista de camiones con sus tamaños y rectángulos
     const std::vector<TruckData> TRUCKS = {
         {{16, 9}, {0, 0}, {60, 36}},
         {{16, 10}, {0, 9}, {60, 40}},
@@ -105,7 +103,7 @@ namespace Global {
     const std::string FROG_SPRITE_PATH = "res\\sprites\\Frogger.png";
     const std::string TRUCK_SPRITE_PATH = "res\\sprites\\Trucks.png";
     const std::string TRUCKFLIPPED_SPRITE_PATH = "res\\sprites\\TrucksFlipped.png";
-    const std::string TILEMAP_SPRITE_PATH = "res\\sprites\\Route.png";
+    const std::string TILEMAP_SPRITE_PATH = "res\\sprites\\Route-Tiles.png";
     const std::string FROG_DEATH_SPRITE_PATH = "res\\sprites\\AnimationDeath.png";
 
     //SFX

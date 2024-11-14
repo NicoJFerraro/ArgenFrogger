@@ -35,19 +35,18 @@ std::vector<Truck> LevelGenerator::GenerateTrucks(float checkpointY, int truckCo
 
 TileMap LevelGenerator::GenerateTileMap(float checkpointY, int currentCheckpoint) {
     TileMap tileMap;
-    std::string tilesetPath = "res\\sprites\\Route.png";
+    std::string tilesetPath = Global::TILEMAP_SPRITE_PATH;
 
-    // Tamaño de dibujado de los tiles
+    //Desired tile size
     sf::Vector2u tileSize(70, 70);
 
-    // Calcular el ancho y alto en tiles
+    // Calculates de tile size
     int width = windowSize.x / tileSize.x;
     int height = Global::CHECKPOINT_DISTANCE / tileSize.y;
 
-    // Asegurarse de cubrir toda el área visible
+    // Covers the hole area
     if (windowSize.x % tileSize.x != 0) width += 1;
     if ((int)Global::CHECKPOINT_DISTANCE % tileSize.y != 0) height += 1;
-    // Posicionar el mapa en el eje Y según el checkpoint
     float positionY = checkpointY - Global::CHECKPOINT_DISTANCE;
 
     if (tileMap.load(tilesetPath, tileSize, width, height)) {
